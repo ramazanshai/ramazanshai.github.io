@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8" />
-	<link rel="stylesheet" href="circle.css" type="text/css" />
-	<script src="circle.js" type="text/javascript"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toguz Kumalak</title>
+    <link rel="stylesheet" href="circle.css" />
+    <script src="circle.js"></script>
 </head>
 <body>
-	<div id="board">
-	</div>
-	<div id="moves">moves
-	</div>
+    <div id="board"></div>
+    <div id="moves">moves</div>
+    <p><input type="button" value="New game" onclick="start()"></p>
 
-	<p><input type="button" value="New game" onclick="start()"></p>
-	<script>start();</script>
-
+    <script>
+        // Telegram Mini App initialization
+        if (window.Telegram.WebApp) {
+            Telegram.WebApp.ready(); // Сообщаем Telegram, что приложение готово
+        }
+        start();
+    </script>
 </body>
 </html>
