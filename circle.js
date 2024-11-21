@@ -193,3 +193,25 @@ function show_moves()
 	document.getElementById("moves").innerHTML = html;
 }
 
+if (window.Telegram.WebApp) {
+    const webApp = window.Telegram.WebApp;
+
+    // Настроить цвет темы, если нужно
+    webApp.setBackgroundColor("#ffffff");
+    webApp.expand(); // Расширяет мини-приложение на весь экран
+
+    // Пример передачи сообщений в Telegram
+    const sendGameState = () => {
+        webApp.sendData(JSON.stringify(boardState)); // Отправка состояния игры
+    };
+
+    // Отправить начальное состояние игры
+    sendGameState();
+
+    // Обновление состояния при каждом ходе
+    const originalMakeMove = makeMove;
+    makeMove = (pitIndex) => {
+        originalMakeMove(pitIndex); // Выполнить оригинальную логику
+        sendGameState(); // Отправить обновленное состояние
+    };
+}
