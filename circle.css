@@ -1,0 +1,68 @@
+h3 {
+	text-align: center;
+}
+
+div {
+	float: left;
+	padding: 5px;
+}
+
+p {
+	clear: both;
+	text-align: center;
+}
+
+tr {
+	text-align: center;
+}
+
+td {
+	width: 10px;
+  height: 10px;
+}
+
+.numbering {
+	font-size: 10px;
+	font-weight: bold;
+	color: blue;
+}
+
+.kazan {
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.otau td {
+    border: 1px solid #333;
+    position: relative;
+}
+
+.ball {
+    display: inline-block;
+    width: 0.5px;
+    height: 0.5px;
+    margin: 0.5px;
+    background-color: #f39c12;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.otau td:hover {
+    background-color: #f0e68c;
+    cursor: pointer;
+}
+
+table {
+    margin: 2px auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 400px;
+}
+
+/* Новые стили для количества шариков */
+.count {
+    font-size: 1px; /* Размер шрифта для количества шариков */
+    font-weight: bold; /* Жирный текст */
+    margin-top: 1px; /* Отступ сверху */
+    color: #333; /* Цвет текста */
+}
