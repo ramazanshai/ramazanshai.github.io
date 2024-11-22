@@ -192,4 +192,3 @@ function show_moves()
 	}
 	document.getElementById("moves").innerHTML = html;
 }
-
