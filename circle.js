@@ -66,9 +66,9 @@ function generateBalls(count) {
     return ballsHTML;
 }
 
-function click_otau(num)
-{
-	make_move(num);
+function click_otau(num) {
+    make_move(num);
+    setTimeout(ai_move, 500); // ИИ делает ход с небольшой задержкой
 }
 
 function make_move(num)
@@ -192,3 +192,74 @@ function show_moves()
 	}
 	document.getElementById("moves").innerHTML = html;
 }
+
+function ai_move() {
+    if (finished) return;
+
+    var bestMove = -1;
+    var bestScore = -Infinity;
+
+    for (var i = 0; i < 9; i++) {
+        if (toguzFields[22] === 0 && toguzFields[i] > 0 && toguzFields[i] !== 255) {
+            let clonedFields = toguzFields.slice();
+            let score = simulate_move(clonedFields, i, toguzFields[22]);
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = i;
+            }
+        } else if (toguzFields[22] === 1 && toguzFields[i + 9] > 0 && toguzFields[i + 9] !== 255) {
+            let clonedFields = toguzFields.slice();
+            let score = simulate_move(clonedFields, i + 9, toguzFields[22]);
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = i + 9;
+            }
+        }
+    }
+
+    if (bestMove !== -1) {
+        make_move(bestMove);
+    }
+}
+
+function simulate_move(fields, num, color) {
+    var numotau = num;
+    var numkum = fields[numotau];
+
+    if (numkum === 0 || numkum === 255) return -Infinity;
+
+    if (numkum === 1) {
+        fields[numotau] = 0;
+        var sow = 1;
+    } else {
+        fields[numotau] = 1;
+        var sow = numkum - 1;
+    }
+
+    for (var i = 0; i < sow; i++) {
+        numotau++;
+        if (numotau > 17) numotau = 0;
+        fields[numotau]++;
+    }
+
+    if (fields[numotau] % 2 === 0) {
+        if (color === 0 && numotau > 8) {
+            fields[18] += fields[numotau];
+            fields[numotau] = 0;
+        } else if (color === 1 && numotau < 9) {
+            fields[19] += fields[numotau];
+            fields[numotau] = 0;
+        }
+    }
+
+    return evaluate_position(fields, color);
+}
+
+function evaluate_position(fields, color) {
+    if (color === 0) {
+        return fields[18] - fields[19];
+    } else {
+        return fields[19] - fields[18];
+    }
+}
+
