@@ -191,28 +191,31 @@ function show_moves()
 			html += " " + gameMoves[i] + '<br />';
 	}
 	document.getElementById("moves").innerHTML = html;
-}
+} 
+
+////////////////////////////////////////////////////////////
+// Transposition Table için
+const transpositionTable = new Map();
 
 function ai_move() {
     if (finished) return;
 
-    var bestMove = -1;
-    var bestScore = -Infinity;
+    let bestMove = -1;
+    let bestScore = -Infinity;
+    const maxDepth = 6; // Derinliği artırdık
 
-    for (var i = 0; i < 9; i++) {
-        if (toguzFields[22] === 0 && toguzFields[i] > 0 && toguzFields[i] !== 255) {
-            let clonedFields = toguzFields.slice();
-            let score = simulate_move(clonedFields, i, toguzFields[22]);
-            if (score > bestScore) {
-                bestScore = score;
-                bestMove = i;
-            }
-        } else if (toguzFields[22] === 1 && toguzFields[i + 9] > 0 && toguzFields[i + 9] !== 255) {
-            let clonedFields = toguzFields.slice();
-            let score = simulate_move(clonedFields, i + 9, toguzFields[22]);
-            if (score > bestScore) {
-                bestScore = score;
-                bestMove = i + 9;
+    // Iterative Deepening
+    for (let currentDepth = 1; currentDepth <= maxDepth; currentDepth++) {
+        for (let i = 9; i < 18; i++) {
+            if (toguzFields[i] > 0 && toguzFields[i] !== 255) {
+                let clonedFields = toguzFields.slice();
+                simulate_move(clonedFields, i, 1);
+
+                let score = minimax(clonedFields, currentDepth - 1, false, -Infinity, Infinity);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
             }
         }
     }
@@ -222,44 +225,182 @@ function ai_move() {
     }
 }
 
-function simulate_move(fields, num, color) {
-    var numotau = num;
-    var numkum = fields[numotau];
-
-    if (numkum === 0 || numkum === 255) return -Infinity;
-
-    if (numkum === 1) {
-        fields[numotau] = 0;
-        var sow = 1;
-    } else {
-        fields[numotau] = 1;
-        var sow = numkum - 1;
+function minimax(fields, depth, isMaximizingPlayer, alpha, beta) {
+    const boardHash = fields.join(',');
+    if (transpositionTable.has(boardHash)) {
+        return transpositionTable.get(boardHash);
     }
 
-    for (var i = 0; i < sow; i++) {
+    if (depth === 0 || is_game_over(fields)) {
+        return quiescence_search(fields, isMaximizingPlayer, alpha, beta);
+    }
+
+    if (isMaximizingPlayer) {
+        let maxEval = -Infinity;
+        for (let i = 9; i < 18; i++) {
+            if (fields[i] > 0 && fields[i] !== 255) {
+                let clonedFields = fields.slice();
+                simulate_move(clonedFields, i, 1);
+                let eval = minimax(clonedFields, depth - 1, false, alpha, beta);
+                maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) break;
+            }
+        }
+        transpositionTable.set(boardHash, maxEval);
+        return maxEval;
+    } else {
+        let minEval = Infinity;
+        for (let i = 0; i < 9; i++) {
+            if (fields[i] > 0 && fields[i] !== 255) {
+                let clonedFields = fields.slice();
+                simulate_move(clonedFields, i, 0);
+                let eval = minimax(clonedFields, depth - 1, true, alpha, beta);
+                minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) break;
+            }
+        }
+        transpositionTable.set(boardHash, minEval);
+        return minEval;
+    }
+}
+
+function quiescence_search(fields, isMaximizingPlayer, alpha, beta) {
+    let standPat = evaluate_position(fields);
+    if (isMaximizingPlayer) {
+        if (standPat >= beta) return beta;
+        if (alpha < standPat) alpha = standPat;
+    } else {
+        if (standPat <= alpha) return alpha;
+        if (beta > standPat) beta = standPat;
+    }
+
+    // Sadece kazanma potansiyeli olan hamleleri değerlendir
+    const relevantMoves = get_relevant_moves(fields, isMaximizingPlayer);
+    for (let move of relevantMoves) {
+        let clonedFields = fields.slice();
+        simulate_move(clonedFields, move, isMaximizingPlayer ? 1 : 0);
+        let score;
+        if (isMaximizingPlayer) {
+            score = quiescence_search(clonedFields, false, alpha, beta);
+            if (score >= beta) return beta;
+            if (score > alpha) alpha = score;
+        } else {
+            score = quiescence_search(clonedFields, true, alpha, beta);
+            if (score <= alpha) return alpha;
+            if (score < beta) beta = score;
+        }
+    }
+
+    return isMaximizingPlayer ? alpha : beta;
+}
+
+function get_relevant_moves(fields, isMaximizingPlayer) {
+    const relevantMoves = [];
+    const start = isMaximizingPlayer ? 9 : 0;
+    const end = isMaximizingPlayer ? 18 : 9;
+
+    for (let i = start; i < end; i++) {
+        if (fields[i] > 1 && fields[i] !== 255) {
+            relevantMoves.push(i);
+        }
+    }
+
+    return relevantMoves;
+}
+
+function evaluate_position(fields) {
+    let aiScore = fields[19];
+    let playerScore = fields[18];
+    let aiStones = 0;
+    let playerStones = 0;
+
+    for (let i = 9; i < 18; i++) {
+        if (fields[i] !== 255) aiStones += fields[i];
+    }
+    for (let i = 0; i < 9; i++) {
+        if (fields[i] !== 255) playerStones += fields[i];
+    }
+
+    let score = (aiScore - playerScore) * 15 + (aiStones - playerStones) * 2;
+
+    // Bonus for tuzdyks
+    if (fields[21] !== 0) score += 50; // AI's tuzdyk
+    if (fields[20] !== 0) score -= 50; // Player's tuzdyk
+
+    // Bonus for controlling more holes
+    let aiControlledHoles = fields.slice(9, 18).filter(v => v > 0 && v !== 255).length;
+    let playerControlledHoles = fields.slice(0, 9).filter(v => v > 0 && v !== 255).length;
+    score += (aiControlledHoles - playerControlledHoles) * 5;
+
+    return score;
+}
+
+// ... (diğer fonksiyonlar aynı kalabilir)
+function simulate_move(fields, num, color) {
+    let sow, numotau;
+    let numkum = fields[num];
+
+    if (numkum == 1) {
+        fields[num] = 0;
+        sow = 1;
+    } else {
+        fields[num] = 1;
+        sow = numkum - 1;
+    }
+
+    numotau = num;
+    for (let i = 0; i < sow; i++) {
         numotau++;
         if (numotau > 17) numotau = 0;
-        fields[numotau]++;
+        if (fields[numotau] == 255) {
+            if (numotau > 8) fields[18]++;
+            else fields[19]++;
+        } else fields[numotau]++;
     }
 
-    if (fields[numotau] % 2 === 0) {
-        if (color === 0 && numotau > 8) {
+    // Tuzdyk ve çift sayılı kumalak yakalama kurallarını uygula
+    if (fields[numotau] == 3) {
+        if ((color == 0) && (fields[20] == 0) && (numotau > 8) &&
+            (numotau < 17) && (fields[21] != numotau - 8)) {
+            fields[18] += 3;
+            fields[numotau] = 255;
+            fields[20] = numotau - 8;
+        } else if ((color == 1) && (fields[21] == 0) && (numotau < 8)
+            && (fields[20] != numotau + 1)) {
+            fields[19] += 3;
+            fields[numotau] = 255;
+            fields[21] = numotau + 1;
+        }
+    }
+
+    if (fields[numotau] % 2 == 0) {
+        if ((color == 0) && (numotau > 8)) {
             fields[18] += fields[numotau];
             fields[numotau] = 0;
-        } else if (color === 1 && numotau < 9) {
+        } else if ((color == 1) && (numotau < 9)) {
             fields[19] += fields[numotau];
             fields[numotau] = 0;
         }
     }
 
-    return evaluate_position(fields, color);
+    // Sırayı değiştir
+    fields[22] = 1 - color;
 }
 
-function evaluate_position(fields, color) {
-    if (color === 0) {
-        return fields[18] - fields[19];
-    } else {
-        return fields[19] - fields[18];
-    }
-}
+function is_game_over(fields) {
+    let whiteKum = 0, blackKum = 0;
 
+    for (let i = 0; i < 9; i++)
+        if (fields[i] < 255)
+            whiteKum += fields[i];
+    for (let i = 9; i < 18; i++)
+        if (fields[i] < 255)
+            blackKum += fields[i];
+
+    if (fields[18] >= 82 || fields[19] >= 82 || (whiteKum == 0 && blackKum == 0))
+        return true;
+
+    return false;
+}
