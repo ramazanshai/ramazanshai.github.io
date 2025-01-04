@@ -17,8 +17,23 @@ tr {
 }
 
 td {
-	width: 10px;
-  height: 10px;
+    width: 10px;
+    height: 10px;
+}
+
+.layer:nth-child(n + 2) {
+    position: absolute;
+    transform: translateX(3px) translateY(-4px);
+}
+
+.layer:nth-child(n + 3) {
+    position: absolute;
+    transform: translateY(-8px);
+}
+
+.layer:nth-child(n + 4) {
+    position: absolute;
+    transform: translateX(3px) translateY(-12px);
 }
 
 .numbering {

@@ -59,10 +59,18 @@ function show_board() {
 // Функция для создания шариков в зависимости от количества
 function generateBalls(count) {
     if (count === 255) return "X"; // для туздыков
+
     let ballsHTML = "";
+    let layerHTML = "";
     for (let i = 0; i < count; i++) {
-        ballsHTML += "<div class='ball'></div>";
+        layerHTML += "<div class='ball'></div>";
+
+        if (i % 10 == 9 || i == count - 1) {
+            ballsHTML += "<div class='layer'>" + layerHTML + "</div>";
+            layerHTML = "";
+        }
     }
+
     return ballsHTML;
 }
 

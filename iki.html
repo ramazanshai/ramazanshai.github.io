@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="iki.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Calculator</h1>
+        
+        <!-- Table layout for input and operation selection -->
+        <table class="form-table">
+            <tr>
+                <td><label for="num1">Enter first number:</label></td>
+                <td><input type="number" id="num1" placeholder="Number 1" required></td>
+            </tr>
+            <tr>
+                <td><label for="num2">Enter second number:</label></td>
+                <td><input type="number" id="num2" placeholder="Number 2" required></td>
+            </tr>
+            <tr>
+                <td><label for="operation">Select operation:</label></td>
+                <td>
+                    <select id="operation">
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                        <option value="*">*</option>
+                        <option value="/">/</option>
+                        <option value="%">%</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button id="calculate">Calculate</button>
+                </td>
+            </tr>
+        </table>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script src="iki.js"></script>
+</body>
+</html>
