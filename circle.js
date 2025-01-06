@@ -25,13 +25,22 @@ function init_board()
 
 function show_board() {
     var html = "<table border='1' cellspacing='3' height='300'>";
-    html += "<tr class='numbering'>";
-    html += "<td class='kazan' rowspan='4'>" + toguzFields[19] + "</td>";
-    for (var i = 9; i > 0; i--)
-        html += "<td>" + i + "</td>";
-    html += "<td class='kazan' rowspan='4'>" + toguzFields[18] + "</td>";
+
+    // Строка с казанами
+    html += "<tr class='kazan-row'>";
+    html += "<td colspan='3'></td>";
+    html += "<td colspan='3' class='kazan'>" + toguzFields[19] + "</td>"; // Казан черных
+    html += "<td colspan='3'></td>";
+    html += "<td colspan='3' class='kazan'>" + toguzFields[18] + "</td>"; // Казан белых
+    html += "<td colspan='3'></td>";
     html += "</tr>";
 
+    // Верхняя нумерация
+    html += "<tr class='numbering'>";
+    for (var i = 9; i > 0; i--) html += "<td>" + i + "</td>";
+    html += "</tr>";
+
+    // Верхние лунки
     html += "<tr class='otau'>";
     for (var i = 17; i > 8; i--) {
         html += "<td onclick='click_otau(" + i + "); '>";
@@ -40,6 +49,7 @@ function show_board() {
     }
     html += "</tr>";
 
+    // Нижние лунки
     html += "<tr class='otau'>";
     for (var i = 0; i < 9; i++) {
         html += "<td onclick='click_otau(" + i + "); '>";
@@ -48,15 +58,15 @@ function show_board() {
     }
     html += "</tr>";
 
+    // Нижняя нумерация
     html += "<tr class='numbering'>";
-    for (var i = 1; i < 10; i++)
-        html += "<td>" + i + "</td>";
+    for (var i = 1; i < 10; i++) html += "<td>" + i + "</td>";
     html += "</tr>";
+
     html += "</table>";
     document.getElementById("board").innerHTML = html;
 }
 
-// Функция для создания шариков в зависимости от количества
 function generateBalls(count) {
     if (count === 255) return "X"; // для туздыков
 
@@ -71,6 +81,8 @@ function generateBalls(count) {
         }
     }
 
+    // Добавляем скрытые числа, которые появляются при наведении
+    ballsHTML += `<span class='ball-count'>${count}</span>`;
     return ballsHTML;
 }
 

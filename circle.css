@@ -45,30 +45,36 @@ td {
 	color: blue;
 }
 
+.kazan-row {
+    height: 50px; /* Высота строки с казанами */
+}
+
 .kazan {
-	font-size: 10px;
-	font-weight: bold;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    background-color: #f0e68c;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .otau td {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
     border: 1px solid #333;
+    background-color: #fff;
     position: relative;
-}
-
-.ball {
-    display: inline-block;
-    width: 0.5px;
-    height: 0.5px;
-    margin: 0.5px;
-    background-color: #f39c12;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .otau td:hover {
     background-color: #f0e68c;
     cursor: pointer;
 }
+
+
 
 table {
     margin: 2px auto;
@@ -85,14 +91,44 @@ table {
     color: #333; /* Цвет текста */
 }
 
-
 .numbering td {
-    width: 50px; /* Фиксированная ширина ячейки */
-    height: 30px; /* Фиксированная высота ячейки */
-    font-size: 14px; /* Размер шрифта для цифр */
-    font-weight: bold; /* Жирный текст */
-    text-align: center; /* Центрирование текста по горизонтали */
-    vertical-align: middle; /* Центрирование текста по вертикали */
-    line-height: 30px; /* Для точного выравнивания текста */
-    color: blue; /* Цвет текста */
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: blue;
+}
+
+
+.balls {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.ball {
+    display: inline-block;
+    width: 0.5px;
+    height: 0.5px;
+    margin: 0.5px;
+    background-color: #f39c12;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.ball-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: gray; /* Серый цвет для числа */
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0; /* Скрыть число по умолчанию */
+    transition: opacity 0.2s;
+}
+
+.otau:hover .ball-count {
+    opacity: 1; /* Отображать число при наведении */
 }
