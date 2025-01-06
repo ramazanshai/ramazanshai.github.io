@@ -1,0 +1,134 @@
+h3 {
+	text-align: center;
+}
+
+div {
+	float: left;
+	padding: 5px;
+}
+
+p {
+	clear: both;
+	text-align: center;
+}
+
+tr {
+	text-align: center;
+}
+
+td {
+    width: 50px; /* Устанавливаем фиксированную ширину */
+    height: 50px; /* Устанавливаем фиксированную высоту */
+    text-align: center; /* Центрирование содержимого */
+    vertical-align: middle; /* Центрирование по вертикали */
+    position: relative; /* Для внутреннего позиционирования элементов */
+}
+
+.layer:nth-child(n + 2) {
+    position: absolute;
+    transform: translateX(3px) translateY(-4px);
+}
+
+.layer:nth-child(n + 3) {
+    position: absolute;
+    transform: translateY(-8px);
+}
+
+.layer:nth-child(n + 4) {
+    position: absolute;
+    transform: translateX(3px) translateY(-12px);
+}
+
+.numbering {
+	font-size: 10px;
+	font-weight: bold;
+	color: blue;
+}
+
+.kazan-row {
+    height: 50px; /* Высота строки с казанами */
+}
+
+.kazan {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    background-color: #f0e68c;
+    border: 2px solid #333;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.otau td {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #333;
+    background-color: #fff;
+    position: relative;
+}
+
+.otau td:hover {
+    background-color: #f0e68c;
+    cursor: pointer;
+}
+
+
+
+table {
+    margin: 2px auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 400px;
+}
+
+/* Новые стили для количества шариков */
+.count {
+    font-size: 1px; /* Размер шрифта для количества шариков */
+    font-weight: bold; /* Жирный текст */
+    margin-top: 1px; /* Отступ сверху */
+    color: #333; /* Цвет текста */
+}
+
+.numbering td {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: blue;
+}
+
+
+.balls {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.ball {
+    display: inline-block;
+    width: 0.5px;
+    height: 0.5px;
+    margin: 0.5px;
+    background-color: #f39c12;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.ball-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: gray; /* Серый цвет для числа */
+    font-size: 12px;
+    font-weight: bold;
+    opacity: 0; /* Скрыть число по умолчанию */
+    transition: opacity 0.2s;
+}
+
+.otau:hover .ball-count {
+    opacity: 1; /* Отображать число при наведении */
+}
