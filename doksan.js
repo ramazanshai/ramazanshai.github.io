@@ -5,9 +5,14 @@ var finished, gameResult;
 
 function start()
 {
-	init_board();
+	set_position();
 	show_board();
 	show_moves();
+}
+
+function click_otau(num) {
+    make_move(num);
+    setTimeout(ai_move, 500); // ИИ делает ход с небольшой задержкой
 }
 
 function init_board()
@@ -23,48 +28,73 @@ function init_board()
 			toguzFields[i] = 0;
 }
 
-function show_board() {
-    var html = "<table border='1' cellspacing='3' height='300'>";
+function set_position() {
+    toguzFields = [
+        1, 2, 20, 7, 19, 255, 1, 2, 0,  // Нижние лунки
+        255, 0, 6, 18, 6, 7, 5, 1, 1,  // Верхние лунки
+        42, // Казан белых
+        24, // Казан черных
+        0,  // Туздыки белых
+        0,  // Туздыки черных
+        0   // Ходящий игрок (0 = белые, 1 = черные)  
+    ];
+    show_board();
+    show_moves();
+}
 
-    // Строка с казанами
-    html += "<tr class='kazan-row'>";
-    html += "<td colspan='3'></td>";
-    html += "<td colspan='3' class='kazan'>" + toguzFields[19] + "</td>"; // Казан черных
-    html += "<td colspan='3'></td>";
-    html += "<td colspan='3' class='kazan'>" + toguzFields[18] + "</td>"; // Казан белых
-    html += "<td colspan='3'></td>";
-    html += "</tr>";
 
-    // Верхняя нумерация
-    html += "<tr class='numbering'>";
-    for (var i = 9; i > 0; i--) html += "<td>" + i + "</td>";
-    html += "</tr>";
+function init_board()
+{
+	finished = false;
+	gameResult = -2;
+	gameMoves = [];
 
-    // Верхние лунки
-    html += "<tr class='otau'>";
-    for (var i = 17; i > 8; i--) {
-        html += "<td onclick='click_otau(" + i + "); '>";
-        html += generateBalls(toguzFields[i]);
-        html += "</td>";
-    }
-    html += "</tr>";
+	for (var i = 0; i < array_size; i++)
+		if (i < 18)
+			toguzFields[i] = 9;
+		else
+			toguzFields[i] = 0;
+}
 
-    // Нижние лунки
-    html += "<tr class='otau'>";
-    for (var i = 0; i < 9; i++) {
-        html += "<td onclick='click_otau(" + i + "); '>";
-        html += generateBalls(toguzFields[i]);
-        html += "</td>";
-    }
-    html += "</tr>";
+function show_board() {  
+    var html = "<table border='1' cellspacing='3' height='300'>";  
 
-    // Нижняя нумерация
-    html += "<tr class='numbering'>";
-    for (var i = 1; i < 10; i++) html += "<td>" + i + "</td>";
-    html += "</tr>";
+    // Казаны над доской  
+    html += "<tr class='kazan-row'>";  
+    html += "<td colspan='5' class='kazan'>Казан белых: " + toguzFields[18] + "</td>"; // Сокращено  
+    html += "<td colspan='5' class='kazan'>Казан черных: " + toguzFields[19] + "</td>"; // Сокращено  
+    html += "</tr>";  
 
-    html += "</table>";
-    document.getElementById("board").innerHTML = html;
+    // Верхняя нумерация  
+    html += "<tr class='numbering'>";  
+    for (var i = 9; i > 0; i--) html += "<td>" + i + "</td>"; // Нумерация верхней стороны  
+    html += "</tr>";  
+
+    // Верхние лунки  
+    html += "<tr class='otau'>";  
+    for (var i = 17; i > 8; i--) {  
+        html += "<td onclick='click_otau(" + i + ");'>";  
+        html += generateBalls(toguzFields[i]);  
+        html += "</td>";  
+    }  
+    html += "</tr>";  
+
+    // Нижние лунки  
+    html += "<tr class='otau'>";  
+    for (var i = 0; i < 9; i++) {  
+        html += "<td onclick='click_otau(" + i + ");'>";  
+        html += generateBalls(toguzFields[i]);  
+        html += "</td>";  
+    }  
+    html += "</tr>";  
+
+    // Нижняя нумерация  
+    html += "<tr class='numbering'>";  
+    for (var i = 1; i < 10; i++) html += "<td>" + i + "</td>"; // Нумерация нижней стороны  
+    html += "</tr>";  
+
+    html += "</table>";  
+    document.getElementById("board").innerHTML = html;  
 }
 
 function generateBalls(count) {
@@ -86,27 +116,20 @@ function generateBalls(count) {
     return ballsHTML;
 }
 
-function click_otau(num) {
-    make_move(num);
-    setTimeout(ai_move, 500); // ИИ делает ход с небольшой задержкой
-}
+// Функция для выполнения хода игрока или ИИ
+function make_move(num) {
+    if (finished) return;
 
-function make_move(num)
-{
-	if (finished) return;
+    var color = toguzFields[22];
+    if ((color === 0 && num > 8) || (color === 1 && num < 9)) return;
 
-	var color = toguzFields[22];
-    if (color == 0 && num > 8) return;
-    if (color == 1 && num < 9) return;
-
-    var sow, finished_otau;
-    var capturedTuzdyk = false;
+    var sow;
     var numotau = num;
     var numkum = toguzFields[numotau];
 
-    if ((numkum == 0) || (numkum == 255)) return;
+    if ((numkum === 0) || (numkum === 255)) return;
 
-    if (numkum == 1) {
+    if (numkum === 1) {
         toguzFields[numotau] = 0;
         sow = 1;
     } else {
@@ -117,38 +140,26 @@ function make_move(num)
     for (var i = 0; i < sow; i++) {
         numotau++;
         if (numotau > 17) numotau = 0;
-        if (toguzFields[numotau] == 255) {
+        if (toguzFields[numotau] === 255) {
             if (numotau > 8) toguzFields[18]++;
             else toguzFields[19]++;
         } else toguzFields[numotau]++;
     }
 
-    if (toguzFields[numotau] == 3) {
-        if ((color == 0) && (toguzFields[20] == 0) && (numotau > 8) &&
-                (numotau < 17) && (toguzFields[21] != numotau - 8)) {
-            toguzFields[18] += 3;
-            toguzFields[numotau] = 255;
-            toguzFields[20] = numotau - 8;
-            capturedTuzdyk = true;
-        } else if ((color == 1) && (toguzFields[21] == 0) && (numotau < 8)
-                && (toguzFields[20] != numotau + 1)) {
-            toguzFields[19] += 3;
-            toguzFields[numotau] = 255;
-            toguzFields[21] = numotau + 1;
-            capturedTuzdyk = true;
-        }
-    }
+    // Убираем весь код, который ставит туздыки
+    // Если есть какой-то старый код для создания туздыков, его можно просто удалить
 
-    if (toguzFields[numotau] % 2 == 0) {
-        if ((color == 0) && (numotau > 8)) {
+    if (toguzFields[numotau] % 2 === 0) {
+        if ((color === 0) && (numotau > 8)) {
             toguzFields[18] += toguzFields[numotau];
             toguzFields[numotau] = 0;
-        } else if ((color == 1) && (numotau < 9)) {
+        } else if ((color === 1) && (numotau < 9)) {
             toguzFields[19] += toguzFields[numotau];
             toguzFields[numotau] = 0;
         }
     }
 
+    var finished_otau;
     if (numotau > 8)
         finished_otau = numotau - 9 + 1;
     else
@@ -160,17 +171,14 @@ function make_move(num)
         num = num + 1;
 
     var moveStr = num + "" + finished_otau;
-    if (capturedTuzdyk)
-        moveStr += "x";
     gameMoves.push(moveStr);
 
-    toguzFields[22] = (toguzFields[22] == 0 ? 1 : 0);
+    toguzFields[22] = (toguzFields[22] === 0 ? 1 : 0);
 
-	check_position();
+    check_position();
 }
 
-function check_position()
-{
+function check_position() {
     var whiteKum = 0, blackKum;
     var color = toguzFields[22];
 
@@ -179,40 +187,81 @@ function check_position()
             whiteKum += toguzFields[i];
     blackKum = 162 - whiteKum - toguzFields[18] - toguzFields[19];
 
-    if ((color == 0) && (whiteKum == 0))
+    if ((color === 0) && (whiteKum === 0))
         toguzFields[19] += blackKum;
-
-    else if ((color == 1) && (blackKum == 0))
+    else if ((color === 1) && (blackKum === 0))
         toguzFields[18] += whiteKum;
 
     if (toguzFields[18] >= 82) {
         finished = true;
-        gameResult = 1;
+        gameResult = 1;  // Победа белых
     } else if (toguzFields[19] >= 82) {
         finished = true;
-        gameResult = -1;
-    } else if ((toguzFields[18] == 81) & (toguzFields[19] == 81)) {
+        gameResult = -1;  // Победа черных
+    } else if ((toguzFields[18] === 81) && (toguzFields[19] === 81)) {
         finished = true;
-        gameResult = 0;
+        gameResult = 0;  // Ничья
     }
 
-	show_board();
-	show_moves();
+    show_board();
+    show_moves();
+    
+    if (finished) {
+        setTimeout(start, 10000);  // Автоматически запускаем новую игру через 1 секунду
+    }
 }
 
-function show_moves()
-{
-	var html = '';
-	for (var i = 0; i < gameMoves.length; i++)
-	{
-		if (i % 2 == 0)
-			html += (i/2 + 1) + '. ' + gameMoves[i];
-		else
-			html += " " + gameMoves[i] + '<br />';
-	}
-	document.getElementById("moves").innerHTML = html;
-} 
+let gameScreenshots = []; // Массив для хранения скриншотов
 
+function takeScreenshot() {
+    const boardElement = document.getElementById("board");
+    html2canvas(boardElement, { scale: 0.5 }).then((canvas) => {
+        const screenshotData = canvas.toDataURL("image/png");
+        gameScreenshots.push(screenshotData); // Сохраняем скриншот
+        show_moves(); // Обновляем записи игры, включая новый скриншот
+    });
+}
+
+function show_moves() {
+    let html = '';
+    let blockSize = 20; // 20 записей (10 ходов обоих игроков)
+    let screenshotIndex = 0;
+
+    for (let i = 0; i < gameMoves.length; i++) {
+        if (i % 2 === 0)
+            html += (i / 2 + 1) + '. ' + gameMoves[i];
+        else
+            html += " " + gameMoves[i] + '<br />';
+
+        // Вставляем скриншот после каждых 10 ходов
+        if ((i + 1) % blockSize === 0 && screenshotIndex < gameScreenshots.length) {
+            html += `<img src="${gameScreenshots[screenshotIndex]}" alt="Скриншот после ${((i + 1) / 2)} хода" 
+            style="width: 150px; margin: 5px;"><br />`;
+            screenshotIndex++;
+        }
+    }
+
+    // Если игра завершена, добавляем результат и последний скриншот
+    if (finished) {
+        let resultText = '';
+        if (gameResult === 1) {
+            resultText = '<br /><strong>Результат: Победа белых (1-0)</strong>';
+        } else if (gameResult === -1) {
+            resultText = '<br /><strong>Результат: Победа черных (0-1)</strong>';
+        } else if (gameResult === 0) {
+            resultText = '<br /><strong>Результат: Ничья (0.5-0.5)</strong>';
+        }
+        html += resultText;
+
+        // Добавляем финальный скриншот, если есть
+        if (gameScreenshots[gameScreenshots.length - 1]) {
+            html += `<img src="${gameScreenshots[gameScreenshots.length - 1]}" alt="Финальный скриншот" 
+            style="width: 150px; margin: 5px;"><br />`;
+        }
+    }
+
+    document.getElementById("moves").innerHTML = html;
+}
 ////////////////////////////////////////////////////////////
 // Transposition Table için
 const transpositionTable = new Map();
@@ -424,3 +473,4 @@ function is_game_over(fields) {
 
     return false;
 }
+
