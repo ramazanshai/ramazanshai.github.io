@@ -605,3 +605,4 @@ function drawBoard(field, kazan1, kazan2, player) {
     URL.revokeObjectURL(url);
   }
   
+
