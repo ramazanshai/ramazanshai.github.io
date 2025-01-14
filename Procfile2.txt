@@ -1,1 +1,1 @@
-worker: node boxnew.js
+worker: node bot.js
