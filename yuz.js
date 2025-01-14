@@ -473,4 +473,3 @@ function is_game_over(fields) {
 
     return false;
 }
-
