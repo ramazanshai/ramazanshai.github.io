@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" href="yuz.css"/>
+	<script rel="script" src="yuz.js"></script>
+</head>
+<body>
+	<div id="board">
+	</div>
+	<div id="moves">moves
+	</div>
+
+	<p><input type="button" value="New game" onclick="start()"></p>
+
+	<div id="history"></div>
+
+	<button onclick="takeScreenshot()">Сделать скриншот</button>
+
+	<script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+	<script>start();</script>
+
+</body>
+</html>
