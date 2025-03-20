@@ -3,7 +3,7 @@
         let gameMoves = [];
         let finished, gameResult;
         let currentOtau = null;
-        let hoverStartTime = null;
+        let hoverStartTime = 0;
 
         function start() {
             if (localStorage.getItem('toguzGameState')) {
@@ -338,15 +338,15 @@
                     hoverStartTime = new Date().getTime();
                 } else {
                     const hoverDuration = new Date().getTime() - hoverStartTime;
-                    if (hoverDuration >= 3000) {  // 3 seconds
+                    if (hoverDuration >= 2000) {  // 2 seconds
                         selectedElement.onclick();
                         currentOtau = null;
-                        hoverStartTime = null;
+                        hoverStartTime = 0;
                     }
                 }
             } else {
                 currentOtau = null;
-                hoverStartTime = null;
+                hoverStartTime = 0;
             }
         }
 
@@ -358,4 +358,5 @@
                 selectedElement.classList.add('selected');
             }
         }
+
 
