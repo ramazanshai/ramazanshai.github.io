@@ -1,4 +1,4 @@
-const array_size = 23;
+        const array_size = 23;
         let toguzFields = new Array(array_size);
         let gameMoves = [];
         let finished, gameResult;
@@ -359,4 +359,3 @@ const array_size = 23;
             }
         }
 
-        
