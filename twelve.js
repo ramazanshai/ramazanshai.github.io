@@ -3,7 +3,7 @@
         let gameMoves = [];
         let finished, gameResult;
         let currentOtau = null;
-        let hoverStartTime = 0;
+        let hoverStartTime = null;
 
         function start() {
             if (localStorage.getItem('toguzGameState')) {
@@ -338,15 +338,15 @@
                     hoverStartTime = new Date().getTime();
                 } else {
                     const hoverDuration = new Date().getTime() - hoverStartTime;
-                    if (hoverDuration >= 1000) {  // 2 seconds
+                    if (hoverDuration >= 3000) {  // 3 seconds
                         selectedElement.onclick();
                         currentOtau = null;
-                        hoverStartTime = 0;
+                        hoverStartTime = null;
                     }
                 }
             } else {
                 currentOtau = null;
-                hoverStartTime = 0;
+                hoverStartTime = null;
             }
         }
 
