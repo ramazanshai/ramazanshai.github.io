@@ -338,7 +338,7 @@
                     hoverStartTime = new Date().getTime();
                 } else {
                     const hoverDuration = new Date().getTime() - hoverStartTime;
-                    if (hoverDuration >= 2000) {  // 2 seconds
+                    if (hoverDuration >= 1000) {  // 2 seconds
                         selectedElement.onclick();
                         currentOtau = null;
                         hoverStartTime = 0;
