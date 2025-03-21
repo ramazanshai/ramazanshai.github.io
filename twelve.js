@@ -288,7 +288,7 @@ function setupMouseHover() {
     setInterval(() => {
         if (currentOtau && hoverStartTime) {
             const hoverDuration = new Date().getTime() - hoverStartTime;
-            if (hoverDuration >= 500) {  // 1 seconds
+            if (hoverDuration >= 0) {  // 0 seconds
                 const otauIndex = parseInt(currentOtau.split('-')[1]);
                 click_otau(otauIndex);
                 currentOtau = null;
