@@ -131,3 +131,11 @@ table {
     opacity: 1; /* Отображать число при наведении */
 }
 
+body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
