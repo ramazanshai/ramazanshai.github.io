@@ -4,61 +4,11 @@
 	<meta charset="UTF-8" />
 	<link rel="stylesheet" href="twelve.css"/>
 	<script rel="script" src="twelve.js"></script>
-
-	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 </head>
-<style>
-	.icons-container {
-		display: flex;
-		justify-content: center; /* Выравнивание по центру */
-		gap: 20px; /* Расстояние между иконками */
-	}
-	
-	.icons-container a img {
-		width: 100; /* Размер иконок */
-		height: 100;
-		border-radius: 10px; /* Закругленные углы */
-		border: 3px solid #00ff1e; /* Цветная рамка */
-		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-		transition: transform 0.3s, border-color 0.3s;
-	}
-	
-	.icons-container a img:hover {
-		transform: scale(1.1);
-		border-color: #ff1201; /* Цвет рамки при наведении */
-	}
-	
-	a img {
-		width: 50; /* Размер иконок */
-		height: 50;
-		border-radius: 15px; /* Закругленные углы */
-		border: 4px solid #00ff1e; /* Цветная рамка */
-		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Тень */
-		transition: transform 0.3s, border-color 0.3s;
-	}
-	
-	a img:hover {
-		transform: scale(1.1); /* Эффект увеличения */
-		border-color: #ff1201; /* Цвет рамки при наведении */
-	}
-	
-	
-        .layer { margin-bottom: 5px; }
-        .ball-count { display: none; }
-        .otau:hover .ball-count { display: inline-block; }
-        .otau { cursor: pointer; }
-        .selected { background-color: red !important; }
-        .kazan-row, .numbering, .otau { text-align: center; }
-        video { position: absolute; top: 0; left: 0; z-index: -1; }
-        #board { position: relative; z-index: 1; }
-	</style>
 <body onload="start()">
         <div id="board">Здесь будет игровая доска</div>
         <div id="moves">История ходов</div>
         <button onclick="confirmNewGame()">Start New Game</button>  
-		
-		<video id="inputVideo" width="1280" height="720" autoplay></video>
 
 <div id="moveHistory"></div>  
 
@@ -66,3 +16,4 @@
 	start();</script>
 </body>
 </html>
+
