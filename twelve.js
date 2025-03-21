@@ -288,7 +288,7 @@ const array_size = 23;
             setInterval(() => {
                 if (currentOtau && hoverStartTime) {
                     const hoverDuration = new Date().getTime() - hoverStartTime;
-                    if (hoverDuration >= 2000) {  // 2 seconds
+                    if (hoverDuration >= 500) {  // 0.5 seconds
                         const otauIndex = parseInt(currentOtau.split('-')[1]);
                         click_otau(otauIndex);
                         currentOtau = null;
